@@ -1,5 +1,18 @@
 import { test, expect } from "@playwright/test";
 
+async function register(page: import("@playwright/test").Page) {
+  const response = await page.request.post("/api/auth/register", {
+    headers: { "X-FindMyID": "1" },
+    data: {
+      name: "Test Student",
+      email: `test-${crypto.randomUUID()}@st.ug.edu.gh`,
+      index: "22998877",
+      password: "TestPassword123!",
+    },
+  });
+  expect(response.ok()).toBeTruthy();
+}
+
 test("search finds a matching ID and opens its details", async ({ page }) => {
   await page.goto("/home");
   await page
@@ -21,6 +34,7 @@ test("search finds a matching ID and opens its details", async ({ page }) => {
 });
 
 test("report can be reviewed, persisted and resolved", async ({ page }) => {
+  await register(page);
   await page.goto("/report");
   await page.getByLabel("NAME ON ID").fill("Test Student");
   await page.getByLabel("INDEX NUMBER", { exact: true }).fill("22998877");
@@ -49,7 +63,11 @@ test("report can be reviewed, persisted and resolved", async ({ page }) => {
   await expect(page).toHaveURL(/\/reports$/);
   await page.reload();
   await expect(page.getByRole("heading", { name: "22998877" })).toBeVisible();
-  await page.getByRole("button", { name: "View details" }).click();
+  await page
+    .locator(".report-card")
+    .filter({ hasText: "22998877" })
+    .getByRole("button", { name: "View details" })
+    .click();
   await page.getByRole("link", { name: "Contact Finder" }).click();
   await page.getByRole("button", { name: "Mark as Resolved" }).click();
   await page.getByRole("button", { name: "Solved", exact: true }).click();
@@ -60,6 +78,7 @@ test("report can be reviewed, persisted and resolved", async ({ page }) => {
 test("preferences survive reload and narrow screens do not overflow", async ({
   page,
 }) => {
+  await register(page);
   await page.goto("/settings");
   await page.getByRole("button", { name: /Dark Mode/ }).click();
   await expect(page.getByRole("switch", { name: "Dark Mode" })).toHaveAttribute(

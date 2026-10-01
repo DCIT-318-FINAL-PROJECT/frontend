@@ -4,6 +4,16 @@ test("desktop navigation and layouts use the available screen width", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Desktop layout check");
+  const account = await page.request.post("/api/auth/register", {
+    headers: { "X-FindMyID": "1" },
+    data: {
+      name: "Desktop Student",
+      email: `desktop-${crypto.randomUUID()}@ug.edu.gh`,
+      index: "22012345",
+      password: "TestPassword123!",
+    },
+  });
+  expect(account.ok()).toBeTruthy();
   await page.goto("/home");
   const sidebar = page.getByRole("navigation", { name: "Desktop navigation" });
   await expect(sidebar).toBeVisible();

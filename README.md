@@ -1,23 +1,16 @@
-# FindMyID
+# FindMyID frontend
 
-A mobile-first Next.js / TypeScript implementation of the 15 Visily screenshots provided in this folder. The original JPGs are preserved. The welcome illustration and profile portrait reuse those references.
+A responsive Next.js / TypeScript frontend connected to the ASP.NET Core C# backend in `../backend` with SQLite persistence.
 
-## Run
+Run the backend with `dotnet run --project backend` from the project root, then run `npm install` and `npm run dev` here. Open http://localhost:3000. See [the project README](../README.md) for setup, API endpoints, deployment configuration, limitations, and tests.
 
-```sh
-npm install
-npm run dev
-```
+Development seed accounts: `ama@st.ug.edu.gh`, `kwame@st.ug.edu.gh`, and `abena@st.ug.edu.gh`, each with password `FindMyID123!` when newly created. See [the backend README](../backend/README.md) for the seed command and account/report details.
 
-Open http://localhost:3000. Select **Explore the demo** to open the home screen directly. For the account forms, use a sample email ending in `@st.ug.edu.gh` or `@ug.edu.gh` and a password of at least eight characters. This is a demo session, not real authentication; passwords are neither stored nor checked against an account.
+The browser sends requests through the Next.js `/api` proxy. The backend defaults to http://localhost:5050; set the server-side `API_BASE_URL` environment variable to change it. See `.env.example`.
 
-## Included
+Included screens: welcome, create account, login, home, public ID search, report found ID, review, success, ID details, contact finder, my reports, notifications/messages, profile, and settings. Accounts authenticate with stored password hashes and HttpOnly cookies. Reports, photos, messages, feedback, profiles, and preferences persist in SQLite. Unsaved report drafts remain in session storage.
 
-At 900px and wider, the app uses a desktop workspace with persistent sidebar navigation, an account header, a two-column dashboard and search results, a two-column report form, and wider profile/settings pages. Welcome and account pages have separate desktop layouts. Smaller screens retain the original mobile layout. Desktop layouts are checked at widths of 900, 1024, 1440, and 1920 pixels; search and reporting flows run on both desktop and mobile.
-
-Welcome, create account, login, home, search, report found ID, review, success, ID details, contact finder, my reports, notifications, profile, and settings. Search works by name, full index number, or matching last four digits. Try `22012345` or `Ama`. Report an ID using an 8-digit index, location, and a JPG, PNG, or WebP under 2 MB. Reports and settings persist locally; marking an ID resolved updates the report list. Dark mode is supported.
-
-## Validation
+Loaders cover initial data, search, and mutations. Buttons are disabled during submissions, failures show errors, and initial loading failures provide retry. Desktop layouts use persistent navigation at 900px and wider; smaller screens use mobile navigation.
 
 ```sh
 npm run typecheck
@@ -25,11 +18,4 @@ npm run build
 npx playwright test
 ```
 
-Browser tests use the installed Google Chrome browser and the production build on port 3100. Run `npm run build` first.
-
-## Data and backend
-
-This is a UI prototype with local browser storage. Use sample information. Account forms do not authenticate, uploaded photos remain local, notification updates derive from local reports, and messages are saved as demo messages without delivery. A backend, authenticated authorization, private photo storage, identity verification, and real messaging are needed for production. Preferences for alerts/email are saved, but do not subscribe to push/email services. Data is shared across demo profiles on the same browser; sign-out exits the demo session and preserves demo reports.
-
-Implementation follows the [Next.js App Router setup](https://nextjs.org/docs/app/getting-started/installation).
-# frontend
+Playwright starts both services on test ports and uses a separate database. Google Chrome must be installed.
