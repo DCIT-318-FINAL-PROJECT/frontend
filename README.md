@@ -6,7 +6,7 @@ Run the backend with `dotnet run --project backend` from the project root, then 
 
 Development seed accounts: `ama@st.ug.edu.gh`, `kwame@st.ug.edu.gh`, and `abena@st.ug.edu.gh`, each with password `FindMyID123!` when newly created. See [the backend README](../backend/README.md) for the seed command and account/report details.
 
-The browser sends requests through the Next.js `/api` proxy. The backend defaults to http://localhost:5050; set the server-side `API_BASE_URL` environment variable to change it. See `.env.example`.
+The browser sends requests through the Next.js `/api` proxy, which defaults to the deployed backend at https://backend-findmyid.onrender.com. To use a local backend instead, set `API_BASE_URL=http://localhost:5050` in `.env.local`, then restart the Next.js server. See `.env.example`.
 
 Included screens: welcome, create account, login, home, public ID search, report found ID, review, success, ID details, contact finder, my reports, notifications/messages, profile, and settings. Accounts authenticate with stored password hashes and HttpOnly cookies. Reports, photos, messages, feedback, profiles, and preferences persist in SQLite. Unsaved report drafts remain in session storage.
 
